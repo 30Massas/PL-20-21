@@ -2,7 +2,7 @@
 
 Trabalhos Práticos PL 20/21
 
-Grupo:
+**Grupo:**
 
-Luís Vieira A89601
-João Guedes A89588
+* Luís Vieira A89601
+* João Guedes A89588
