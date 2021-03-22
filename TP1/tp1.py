@@ -57,8 +57,8 @@ def Query2():
     f = open('TP1/processos.xml','r')
     lines = f.read()
 
-    if (m := re.findall(r'<processo .*>((.|\n))?</processo>',lines)) is not None:
-        print(m[1])
+    if (m := re.findall(r'<processo .*>((.|\n)+?)</processo>',lines)) is not None:
+        print(m[0][0])
     else:
         print('A puta nao entra')
 
