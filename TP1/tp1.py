@@ -1,37 +1,87 @@
 import re
 import time
 
+#import ply.lex as lex
 
+"""
+  <processo id="13636">
+    <pasta>581</pasta>
+    <data>1908-05-20</data>
+    <nome>Abilio Augusto Magalhaes</nome>
+    <pai/>
+    <mae>Maria Jesus Magalhaes</mae>
+    <obs/>
+  </processo>
+"""
+
+def getSeculo(ano):
+    i = int(ano)
+    if (i<100):
+        cent = 1
+    elif i % 100 == 0:
+        cent = int(i/100)
+    else:
+        cent = int(i/100 + 1)
+    return cent
+
+def getProcessos(lines):
+    m = re.findall(r'(<processo .*>((.|\n)+?)</processo>)',lines)
+    return m
+
+    
+"""
+{
+    1901: set(8532,5345)
+}
+"""
 def Query1():
-    f = open('TP1/processos.xml', 'r')
+    f = open('processos.xml', 'r')
 
     anos = {}
     seculos = set() 
-
-    for line in f:
-        if (m := re.search(r'<data>(([1-9]{1}[0-9]{0,3}))-\d{2}-\d{2}</data>',line)) is not None:
-            ano = m.group(1)
-            if ano in anos:
-                anos[ano] += 1
-            else:
-                anos[ano] = 1
-            i = int(ano)
-            if (i<100):
-                cent = 1
-            elif i % 100 == 0:
-                cent = int(i/100)
-            else:
-                cent = int(i/100 + 1)
-            seculos.add(cent)
-            
+    dMin = None
+    dMax = None
+    processos = getProcessos(f.read())
+    if processos is None:
+        f.close()
+        return
+    
+    f.close()
+    
+    for p in processos:
+        pr = p[0]
+        if _id_ := re.search(r'<processo id="(\d+)">',pr).group(1):
+            if data := re.search(r'<data>((\d+)-\d+-\d+)</data>',pr):
+                dt = data.group(2)
+                if lista := anos.get(dt):
+                    lista.add(_id_)
+                else:
+                    aux = set()
+                    aux.add(_id_)
+                    anos.update({dt : aux})
+                seculos.add(getSeculo(dt))
+    
+            if dMin is None:
+                dMin = data.group(1)
+            if dMax is None:
+                dMax = data.group(1)
+            if data.group(1) < dMin:
+                dMin = data.group(1)
+            if data.group(1) > dMax:
+                dMax = data.group(1)
+    
     anos_sorted = dict(sorted(anos.items(), key=lambda p:p[0]))
 
-    for a in anos_sorted.keys():
-        print(f'No ano {a} foram registados {anos_sorted.get(a)} processos')
+    
 
-    print(f'\nSéculos: {seculos}')
-        
-    f.close()
+    for a in anos_sorted.keys():
+        print(f'No ano {a} foram registados {len(anos_sorted.get(a))} processos')
+
+    print(f'\nSéculos: {seculos}')    
+    
+    print(f'Data {dMin} até {dMax}')
+
+    
     
 
 
@@ -89,7 +139,6 @@ def switch(i):
 
 
 def main():
-    start = time.time()
 
 
     print('### EXERCÍCIO 2 ###')
@@ -100,10 +149,11 @@ def main():
     print('5 - Utilizando a linguagem de desenho de grafos DOT4 desenhe todas as árvores genealógicas (com base nos triplos < filho, pai, mãe >) dos candidatos referentes a um ano dado pelo utilizador.\n')
 
     choice = int (input('Indique a alínea que pretende averiguar: '))
-
+    start = time.time()
     switch(choice)
 
     end = time.time()
+    print()
     print(f'Time elapsed : {end-start} seconds')
 
 main()
