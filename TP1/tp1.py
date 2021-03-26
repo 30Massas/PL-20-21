@@ -89,9 +89,11 @@ def Query1():
 def Query2():
     proprios = {}
     apelidos = {}
+    processos_avaliados = set()
+
     """
     teste = {
-        1900:{
+        19:{
             prorios{
                  maria:4
                 }
@@ -105,13 +107,14 @@ def Query2():
     teste = {}
 
     f = open('TP1/processos.xml','r')
-    lines = f.read()
-
-    if (m := re.findall(r'<processo .*>((.|\n)+?)</processo>',lines)) is not None:
-        print(m[0][0])
-    else:
-        print('A puta nao entra')
-
+    processos = getProcessos(f.read())
+    for p in processos:
+        pr = p[0]
+        if _id_ := re.search(r'<processo id="(\d+)">',pr).group(1):
+            if _id_ in processos_avaliados:
+                pass
+            else:
+                processos_avaliados.add(_id_)
                 
             
     
@@ -125,6 +128,9 @@ def Query3():
 def Query4():
     pass
     
+def Query5():
+    pass
+
     """
 
 def switch(i):
