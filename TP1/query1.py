@@ -18,7 +18,7 @@ def Query1():
     
     for p in processos:
         pr = p[0]
-        if _id_ := re.search(r'<processo id="(\d+)">',pr).group(1):
+        if _id_ := gf.getId(pr):
             if data := re.search(r'<data>((\d+)-\d+-\d+)</data>',pr):
                 dt = data.group(2)
                 if lista := anos.get(dt):
@@ -49,5 +49,5 @@ def Query1():
     
     print(f'Data {dMin} até {dMax}')
 
-
+    f.close()
    

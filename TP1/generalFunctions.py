@@ -13,3 +13,9 @@ def getSeculo(ano):
 def getProcessos(lines):
     m = re.findall(r'(<processo .*>((.|\n)+?)</processo>)',lines)
     return m
+
+def getId(line):
+    if m:=re.search(r'<processo id="(\d+)">',line):
+        return m.group(1)
+    else: 
+        return None

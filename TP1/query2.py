@@ -33,8 +33,7 @@ def Query2():
     processos = gf.getProcessos(f.read())
     for p in processos:
         pr = p[0]
-        if _id_ := re.search(r'<processo id="(\d+)">',pr):
-            _id_ = _id_.group(1)
+        if _id_ := gf.getId(pr):
             if _id_ in processos_avaliados:
                 #Já foi avaliado, caso de datasets repetidos
                 pass
