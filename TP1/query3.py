@@ -45,7 +45,7 @@ def Query3():
 
                         if len(a) >= 2: # a[-1] -> parentesco
 
-                            if m := re.match(r'(?i:((tio|irmao|primo)(s)? ?(avo)?) ?(materno|paterno)?\3?)',a[-1]):
+                            if m := re.match(r'(?i:((tio|irmao|primo|sobrinho)(s)? ?(avo)?) ?(materno|paterno)?\3?)',a[-1]):
                                 # 0 -> tio|irmao|primo + avo + materno|paterno
                                 # 1 -> tio|irmao|primo + avo plural -> não usar
                                 # 2 -> tio|irmao|primo singular
