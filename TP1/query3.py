@@ -20,6 +20,7 @@ def Query3():
     f=open('processos.xml','r')
     processos = gf.getProcessos(f.read())
 
+    countCandidatos = 0
 
     for p in processos:
 
@@ -31,12 +32,12 @@ def Query3():
                 pass
             else:
                 processos_avaliados.add(_id_)
-            
+
 
                 if m:= re.search(r'<obs>((.|\n)+?)</obs>',pr):
-                    
                     l_partida = m.group(1).split(".")
-
+                    
+                    countCandidatos += 1
                     for p in l_partida:
                         p = p.strip()
                         p = re.sub(r'\s+',r' ',p)
@@ -87,4 +88,5 @@ def Query3():
     for grau in graus.keys():
         print(f'{grau} :> {graus.get(grau)}')
     
+    print(f'\nTotal de candidatos avaliados: {countCandidatos}')
     print(f'\nO grau de parentesco mais frequente é {list(graus.keys())[0]}')
