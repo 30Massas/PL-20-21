@@ -19,7 +19,7 @@ def Query1():
     for p in processos:
         pr = p[0]
         if _id_ := gf.getId(pr):
-            if data := re.search(r'<data>((\d+)-\d+-\d+)</data>',pr):
+            if data := re.search(r'<data>((\d{4})-\d{2}-\d{2})</data>',pr):
                 dt = data.group(2)
                 if lista := anos.get(dt):
                     lista.add(_id_)

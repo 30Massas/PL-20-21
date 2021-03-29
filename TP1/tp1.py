@@ -5,27 +5,16 @@ import query2 as q2
 import query3 as q3
 import query4 as q4
 import query5 as q5
-
-"""
-  <processo id="13636">
-    <pasta>581</pasta>
-    <data>1908-05-20</data>
-    <nome>Abilio Augusto Magalhaes</nome>
-    <pai/>
-    <mae>Maria Jesus Magalhaes</mae>
-    <obs/>
-  </processo>
-"""   
-
+ 
 
 def switch(i):
     switcher={
         #0: exit,
         1: q1.Query1,
         2: q2.Query2,
-        3: q3.Query3
-        #4: q4.Query4
-        #5: q5.Query5
+        3: q3.Query3,
+        4: q4.Query4,
+        5: q5.Query5
     }
     return switcher.get(i,lambda: "Invalid Query")()
 

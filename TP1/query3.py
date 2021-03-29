@@ -88,7 +88,7 @@ def Query3():
                                         graus.update({_key_: count+(len(a)-1)})
                                     else:
                                         graus.update({_key_: len(a)-1})
-
+    f.close()
     graus = dict(sorted(graus.items(), key=lambda p:p[1], reverse=True))
 
     for grau in graus.keys():
