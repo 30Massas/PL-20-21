@@ -37,7 +37,7 @@ def Query3():
                 if m:= re.search(r'<obs>((.|\n)+?)</obs>',pr):
                     parentesco = m.group(1)
                     
-                    if re.search(r'(?i:((tio|irmao|primo|sobrinho)(s)? ?(avo)?) ?(materno|paterno)?\3?)',parentesco):
+                    if re.search(r'(?i:((tio|irmao|primo|sobrinho)(s)? ?(avo|neto|bisavo|bisneto)?) ?(materno|paterno)?\3?)',parentesco):
                         l_partida = m.group(1).split(".")
                         
                         countCandidatos += 1
@@ -50,7 +50,7 @@ def Query3():
 
                             if len(a) >= 2: # a[-1] -> parentesco
                                 
-                                if w := re.match(r'(?i:((tio|irmao|primo|sobrinho)(s)? ?(avo)?) ?(materno|paterno)?\3?)',a[-1]):
+                                if w := re.match(r'(?i:((tio|irmao|primo|sobrinho)(s)? ?(avo|neto|bisavo|bisneto)?) ?(materno|paterno)?\3?)',a[-1]):
                                     # 0 -> tio|irmao|primo + avo + materno|paterno
                                     # 1 -> tio|irmao|primo + avo plural -> não usar
                                     # 2 -> tio|irmao|primo singular
