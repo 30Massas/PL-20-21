@@ -1,0 +1,5 @@
+*.gv
+*.pdf
+.DS_Store
+TP1/__pycache__/
+TP1/test.py
