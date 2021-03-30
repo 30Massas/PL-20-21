@@ -7,7 +7,6 @@ def procuraMae(mae):
     
     processos_avaliados = set()
 
-    flag = False
 
     for p in processos:
         pr = p[0]
@@ -19,12 +18,13 @@ def procuraMae(mae):
             else:
                 processos_avaliados.add(_id_)
                 
-                if re.search(r'<mae>{mae}</mae>',pr):
-                    if flag:
-                        print(f'{mae} tem mais do que um filho.')
-                        return
-                    else:
-                        flag = True
+                if t := re.search(rf'<mae>{mae}</mae>',pr):
+                    if m := re.search(r'<obs>((.|\n)*)</obs>',pr):
+                        i = m.group(1)
+                        if re.search(r'(?i:(irmao|irmaos))',i):
+                            print(f'{mae} tem mais do que um filho.')
+                            return
+                    
                             
     print(f'{mae} não tem mais que um filho.')
     f.close()
@@ -37,7 +37,6 @@ def procuraPai(pai):
     f = open('processos.xml', 'r')
     processos = gf.getProcessos(f.read())
 
-    flag = False
 
     for p in processos:
         pr = p[0]
@@ -49,12 +48,13 @@ def procuraPai(pai):
             else:
                 processos_avaliados.add(_id_)
 
-                if re.search(rf'<pai>{pai}</pai>',pr):
-                    if flag:
-                        print(f'{pai} tem mais do que um filho.')
-                        return
-                    else:
-                        flag = True
+                if t := re.search(rf'<pai>{pai}</pai>',pr):
+                    if m := re.search(r'<obs>((.|\n)*)</obs>',pr):
+                        i = m.group(1)
+                        if re.search(r'(?i:(irmao|irmaos))',i):
+                            print(f'{pai} tem mais do que um filho.')
+                            return
+
     print(f'{pai} não tem mais que um filho.')
     f.close()
 
