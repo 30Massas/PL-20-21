@@ -22,7 +22,7 @@ def procuraMae(mae):
                     if m := re.search(r'<obs>((.|\n)*)</obs>',pr):
                         i = m.group(1)
                         if re.search(r'(?i:(irmao|irmaos))',i):
-                            print(f'{mae} tem mais do que um filho.')
+                            print(f'A {mae} do processo {_id_} tem mais do que um filho.')
                             return
                     
                             
@@ -52,7 +52,7 @@ def procuraPai(pai):
                     if m := re.search(r'<obs>((.|\n)*)</obs>',pr):
                         i = m.group(1)
                         if re.search(r'(?i:(irmao|irmaos))',i):
-                            print(f'{pai} tem mais do que um filho.')
+                            print(f'O {pai} do processo {_id_} tem mais do que um filho.')
                             return
 
     print(f'{pai} não tem mais que um filho.')
