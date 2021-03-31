@@ -2,16 +2,6 @@ import re
 import generalFunctions as gf
 
 
-def turnToSingular(g):
-    final = ''
-    words = g.split(' ')
-    for word in words:
-        sing = word.rstrip(r's|s ')
-        final += sing + ' '
-    last = list(final)[-1]
-    list(final).remove(last)
-    return final
-
 def Query3():
     f = open('processos.xml', 'r')
 
@@ -37,7 +27,7 @@ def Query3():
                     obsConteudo = _obs_.group(1)
                     obsConteudo = re.sub(r'\s+',r' ',obsConteudo)
 
-                    obsConteudo_splited = re.split(r'. ?Proc.\d+. ?',obsConteudo)
+                    obsConteudo_splited = re.split(r'\. ?Proc.\d+\. ?',obsConteudo)
 
                     accountedFor = False
 
@@ -60,7 +50,7 @@ def Query3():
                                         contCandidatos += 1
                                         accountedFor = True
 
-                                    g_sing = turnToSingular(g)
+                                    g_sing = re.sub(r's',r'',g)
 
                                     if count := graus.get(g_sing):
                                         graus.update({g_sing : count+1})
