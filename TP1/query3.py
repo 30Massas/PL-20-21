@@ -2,98 +2,77 @@ import re
 import generalFunctions as gf
 
 
+def turnToSingular(g):
+    final = ''
+    words = g.split(' ')
+    for word in words:
+        sing = word.rstrip(r's|s ')
+        final += sing + ' '
+    last = list(final)[-1]
+    list(final).remove(last)
+    return final
+
 def Query3():
-    processos_avaliados = set()
+    f = open('processos.xml', 'r')
 
-    """
-    {
-    tio paterno:4
-    tio materno:6
-    tio avô:
-    irmao
-    primo
-
-    }
-    """
-    graus = {}
-
-    f=open('processos.xml','r')
     processos = gf.getProcessos(f.read())
 
-    countCandidatos = 0
+    processos_avaliados = set()
 
+    contCandidatos = 0
+    accountedFor = False
+    graus = {}
 
     for p in processos:
-
         pr = p[0]
 
         if _id_ := gf.getId(pr):
-
             if _id_ in processos_avaliados:
                 pass
             else:
                 processos_avaliados.add(_id_)
 
-                if m:= re.search(r'<obs>((.|\n)+?)</obs>',pr):
-                    parentesco = m.group(1)
-                    
-                    if re.search(r'(?i:((tio|irmao|primo|sobrinho)(s)? ?(avo|neto|bisavo|bisneto)?) ?(materno|paterno)?\3?)',parentesco):
-                        l_partida = m.group(1).split(".")
+                if _obs_ := re.search(r'<obs>((.|\n)+?)</obs>',pr):
+
+                    obsConteudo = _obs_.group(1)
+                    obsConteudo = re.sub(r'\s+',r' ',obsConteudo)
+
+                    obsConteudo_splited = re.split(r'. ?Proc.\d+. ?',obsConteudo)
+
+                    accountedFor = False
+
+                    for element in obsConteudo_splited:
+                        obsConteudo_splited2 = re.split(r'\.',element)
+                        #print(obsConteudo_splited2)
                         
-                        countCandidatos += 1
-                        
-                        
-                        for p in l_partida:
-                            p = p.strip()
-                            p = re.sub(r'\s+',r' ',p)
-                            a = p.split(",")
 
-                            if len(a) >= 2: # a[-1] -> parentesco
-                                
-                                if w := re.match(r'(?i:((tio|irmao|primo|sobrinho)(s)? ?(avo|neto|bisavo|bisneto)?) ?(materno|paterno)?\3?)',a[-1]):
-                                    # 0 -> tio|irmao|primo + avo + materno|paterno
-                                    # 1 -> tio|irmao|primo + avo plural -> não usar
-                                    # 2 -> tio|irmao|primo singular
-                                    # 3 -> s
-                                    # 4 -> avo
-                                    # 5 -> paterno|materno 
-                                    # usar 2 3 4 e 5
-                                    
-
-                                    if w.group(3):
-                                        # parse no a[-2] "joao e andré"
-
-                                        x = re.split(r' e | e',a[-2])
-                                        aux = a[-1]
-                                        a.remove(a[-2])
-                                        a.remove(a[-1])
-                                        for item in x:
-                                            a.append(item)
-                                        a.append(aux)
-
-                                    if w.group(4) and w.group(5):
-                                        _key_ = w.group(2).strip() + " " + w.group(4).strip() + " " + w.group(5).strip()
-
-                                    elif w.group(5):
-                                        _key_ = w.group(2).strip() + " " + w.group(5).strip()
-    
-                                    elif w.group(4):
-                                        _key_ = w.group(2).strip() + " " + w.group(4).strip()
-
+                        for elem in obsConteudo_splited2:
+                            if m:= re.search(r'(([A-Z]\w+( e | |,)?)+) ?,((([A-Z]\w+) ?)*)',elem):
+                                g = m.group(4)
+                                #print(g)
+                                if re.search(r'(?i:(sao|san|nos))',g):
+                                    #print('N me interessa')
+                                    pass
+                                elif g == '':
+                                    #print('Espaço vazio')
+                                    pass
+                                else:
+                                    if not accountedFor:
+                                        contCandidatos += 1
+                                        accountedFor = True
+                                    g_sing = turnToSingular(g)
+                                    if count := graus.get(g_sing):
+                                        graus.update({g_sing : count+1})
                                     else:
-                                        _key_ = w.group(2).strip()
+                                        graus.update({g_sing : 1})
 
-                                    
-                                    if count:=graus.get(_key_):
-                                        graus.update({_key_: count+(len(a)-1)})
-                                    else:
-                                        graus.update({_key_: len(a)-1})
     f.close()
-    graus = dict(sorted(graus.items(), key=lambda p:p[1], reverse=True))
+
+    graus = dict(sorted(graus.items(), key=lambda p:p[1],reverse=True))
 
     for grau in graus.keys():
-        print(f'{grau} :> {graus.get(grau)}')
+        print(f'{grau}:> {graus.get(grau)}')
 
-    print(f'\nTotal de candidatos avaliados: {countCandidatos}')
+    print(f'\nTotal de candidatos : {contCandidatos}')
     print(f'\nO grau de parentesco mais frequente é {list(graus.keys())[0]}')
 

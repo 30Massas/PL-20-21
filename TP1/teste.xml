@@ -65,4 +65,52 @@
     <obs>Afonso Manuel Costa Leite,Irmao. Proc.31484. Manuel Filipe,Tio Paterno. Proc.15545. Manuel Fernandes Leite,Tio
       Materno. Proc.15833.</obs>
   </processo>
+    <processo id="8725">
+    <pasta>399</pasta>
+    <data>1786-12-14</data>
+    <nome>Rodrigo Antonio Moreira Sa</nome>
+    <pai>Francisco Joaquim Moreira Sa Barreto</pai>
+    <mae>Josefa Antonia Sotomaior Meneses Vasconcelos</mae>
+    <obs>Antonio Zeferino Moreira Sa e Miguel Joaquim Moreira Sa,Irmaos.Proc.8725. Manuel Maria Brandao Abreu
+      Vasconcelos ou Manuel Maria Brandao Coelho,Tio Materno. Proc.16852. Joaquim Jose Moreira Borges Sa,Tio Paterno.
+      Proc.22384.</obs>
+  </processo>
+    <processo id="16852">
+    <pasta>731</pasta>
+    <data>1763-11-07</data>
+    <nome>Manuel Maria Brandao Coelho</nome>
+    <pai>Valentim Brandao Coelho</pai>
+    <mae>Luisa Xavier Vasconcelos Meneses</mae>
+    <obs>Antonio Jose Sousa Abreu,Tio Paterno. Proc.5670. Manuel Jose Araujo Vasconcelos,Tio Materno. Proc.16657.
+      Antonio Zeferino Moreira Sa,Miguel Joaquim Moreira Sa e Rodrigo Antonio Moreira Sa,Sobrinhos Maternos.
+      Proc.8725.</obs>
+  </processo>
+    <processo id="22384">
+    <pasta>1007</pasta>
+    <data>1772-12-18</data>
+    <nome>Joaquim Jose Moreira Borges Sa</nome>
+    <pai>Francisco Moreira Carneiro</pai>
+    <mae>Eduarda Catarina Borges Sa</mae>
+    <obs>Bento Custodio Borges Sa,Tio Materno. Proc.31456. Antonio Zeferino Moreira Sa, Miguel Joaquim Moreira Sa e
+      Rodrigo Antonio Moreira Sa,Sobrinhos Paternos. Proc.8725.</obs>
+  </processo>
+    <processo id="8725">
+    <pasta>399</pasta>
+    <data>1786-12-14</data>
+    <nome>Antonio Zeferino Moreira Sa</nome>
+    <pai>Francisco Joaquim Moreira Sa Barreto</pai>
+    <mae>Josefa Antonia Sotomaior Meneses Vasconcelos</mae>
+    <obs>Miguel Joaquim Moreira Sa e Rodrigo Antonio Moreira Sa,Irmaos.Proc.8725. Manuel Maria Brandao Abreu Vasconcelos
+      ou Manuel Maria Brandao Coelho,Tio Materno. Proc.16852. Joaquim Jose Moreira Borges Sa,Tio Paterno.
+      Proc.22384.</obs>
+  </processo>
+    <processo id="31510">
+    <pasta>1396</pasta>
+    <data>1734-05-04</data>
+    <nome>Bento Manuel Machado</nome>
+    <pai>Verissimo Machado Fagundes</pai>
+    <mae>Lauriana Maria Sousa</mae>
+    <obs>Miguel Pinheiro e Vicente Pinheiro,Tios Paternos.Proc.9355. Leandro Pereira Brandao,Tio Materno. Proc.6162.
+      Luis Pereira Brandao,Tio Materno. Proc.5883.</obs>
+  </processo>
   </processos>
