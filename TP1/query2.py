@@ -40,7 +40,7 @@ def Query2():
             else:
                 #Processo ainda não foi avaliado
                 processos_avaliados.add(_id_)
-                if _data_ := re.search(r'<data>((\d+)-\d+-\d+)</data>',pr):
+                if _data_ := re.search(r'<data>((\d{4})-\d{2}-\d{2})</data>',pr):
                     ano = _data_.group(2)
                     sec = gf.getSeculo(ano)
                     if sec < minSec:

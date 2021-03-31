@@ -5,6 +5,7 @@ import generalFunctions as gf
 def Query1():
     f = open('processos.xml', 'r')
 
+    processos_avaliados = set()
     anos = {}
     seculos = set() 
     dMin = None
@@ -14,29 +15,31 @@ def Query1():
         f.close()
         return
     
-    f.close()
     
     for p in processos:
         pr = p[0]
         if _id_ := gf.getId(pr):
-            if data := re.search(r'<data>((\d{4})-\d{2}-\d{2})</data>',pr):
-                dt = data.group(2)
-                if lista := anos.get(dt):
-                    lista.add(_id_)
-                else:
-                    aux = set()
-                    aux.add(_id_)
-                    anos.update({dt : aux})
-                seculos.add(gf.getSeculo(dt))
-    
-            if dMin is None:
-                dMin = data.group(1)
-            if dMax is None:
-                dMax = data.group(1)
-            if data.group(1) < dMin:
-                dMin = data.group(1)
-            if data.group(1) > dMax:
-                dMax = data.group(1)
+            if _id_ in processos_avaliados:
+                pass
+            else:
+                if data := re.search(r'<data>((\d{4})-\d{2}-\d{2})</data>',pr):
+                    dt = data.group(2)
+                    if lista := anos.get(dt):
+                        lista.add(_id_)
+                    else:
+                        aux = set()
+                        aux.add(_id_)
+                        anos.update({dt : aux})
+                    seculos.add(gf.getSeculo(dt))
+        
+                if dMin is None:
+                    dMin = data.group(1)
+                if dMax is None:
+                    dMax = data.group(1)
+                if data.group(1) < dMin:
+                    dMin = data.group(1)
+                if data.group(1) > dMax:
+                    dMax = data.group(1)
     
     anos_sorted = dict(sorted(anos.items(), key=lambda p:p[0]))
 
