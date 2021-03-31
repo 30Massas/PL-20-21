@@ -43,26 +43,28 @@ def Query3():
 
                     for element in obsConteudo_splited:
                         obsConteudo_splited2 = re.split(r'\.',element)
-                        #print(obsConteudo_splited2)
                         
 
                         for elem in obsConteudo_splited2:
                             if m:= re.search(r'(([A-Z]\w+( e | |,)?)+) ?,((([A-Z]\w+) ?)*)',elem):
                                 g = m.group(4)
-                                #print(g)
+                                
                                 if re.search(r'(?i:(sao|san|nos))',g):
-                                    #print('N me interessa')
                                     pass
+
                                 elif g == '':
-                                    #print('Espaço vazio')
                                     pass
+
                                 else:
                                     if not accountedFor:
                                         contCandidatos += 1
                                         accountedFor = True
+
                                     g_sing = turnToSingular(g)
+
                                     if count := graus.get(g_sing):
                                         graus.update({g_sing : count+1})
+                                        
                                     else:
                                         graus.update({g_sing : 1})
 
