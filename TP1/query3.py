@@ -46,7 +46,7 @@ def Query3():
                         
 
                         for elem in obsConteudo_splited2:
-                            if m:= re.search(r'(([A-Z]\w+( e | |,)?)+) ?,((([A-Z]\w+) ?)*)',elem):
+                            if m:= re.search(r'(([A-Z]\w+( e| e | |,)?)+) ?,((([A-Z]\w+) ?)*)',elem):
                                 g = m.group(4)
                                 
                                 if re.search(r'(?i:(sao|san|nos))',g):
