@@ -16,7 +16,7 @@ def getIrmaos(obs):
     
 def Query5():
     startID = 0
-    dot = Digraph(comment="teste")
+    dot = Digraph(comment="Gen_Trees")
 
     processos_avaliados = set()
     f = open('processos.xml', 'r')
@@ -67,10 +67,10 @@ def Query5():
                                             dot.edge(mano+_bid_,mae+auxID)
                 startID += 1                         
                      
-    g = open('test.gv','r+')
+    g = open('gen_trees.gv','w+')
     g.write(dot.source)
     g.close()
     
-    dot.render('test.gv',view=True)
+    dot.render('gen_trees.gv',view=True)
 
     f.close()
