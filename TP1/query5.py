@@ -1,6 +1,5 @@
 import re
 import generalFunctions as gf
-from itertools import tee # iterators
 from graphviz import Digraph
 
  
