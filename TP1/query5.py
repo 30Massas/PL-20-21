@@ -78,7 +78,6 @@ def Query5():
                         
                     if obs := re.search(r'<obs>((.|\n)*)</obs>',pr):
                         obs = obs.group(1)
-                        print()
                         if inf := getIrmaos(obs):
 
                             for i in inf:
