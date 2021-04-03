@@ -44,7 +44,7 @@ def getIrmaos(obs):
     return l
     
 def Query5():
-    count = 0
+    startID = 0
     dot = Digraph(comment="teste")
 
     processos_avaliados = set()
@@ -59,7 +59,7 @@ def Query5():
             if _id_ in processos_avaliados:
                 pass
             else:
-
+                auxID = str(startID)
                 if nome := re.search(r'<nome>((.|\n)*)</nome>',pr):
                     nome = nome.group(1)
                     processos_avaliados.add(_id_)
@@ -68,13 +68,13 @@ def Query5():
                     mae = re.search(r'<mae>((.|\n)*)</mae>',pr)
                     if mae:
                         mae = mae.group(1)
-                        dot.node(mae,mae)
-                        dot.edge(nome+_id_,mae)
+                        dot.node(mae+auxID,mae)
+                        dot.edge(nome+_id_,mae+auxID)
                     pai = re.search(r'<pai>((.|\n)*)</pai>',pr)
                     if pai:
                         pai = pai.group(1)
-                        dot.node(pai,pai)
-                        dot.edge(nome+_id_,pai)
+                        dot.node(pai+auxID,pai)
+                        dot.edge(nome+_id_,pai+auxID)
                         
                     if obs := re.search(r'<obs>((.|\n)*)</obs>',pr):
                         obs = obs.group(1)
@@ -82,14 +82,19 @@ def Query5():
 
                             for i in inf:
                                 i = re.split(r',Irmaos?\. ?',i)
-                                _bid_ = i[1]
+                                if i[1] != '':
+                                    _bid_ = getProcID(i[1])
+                                    processos_avaliados.add(_bid_)
+                                else :
+                                    _bid_ = i[1]
                                 if irmaos := re.split(r' e ',i[0]):
                                     for mano in irmaos:
                                         dot.node(mano+_bid_,mano)
                                         if pai:
-                                            dot.edge(mano+_bid_,pai)
+                                            dot.edge(mano+_bid_,pai+auxID)
                                         if mae:
-                                            dot.edge(mano+_bid_,mae)
+                                            dot.edge(mano+_bid_,mae+auxID)
+                startID += 1
                                     
                      
     g = open('test.gv','r+')
