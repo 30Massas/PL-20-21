@@ -18,7 +18,7 @@ def procuraMae(mae):
             else:
                 processos_avaliados.add(_id_)
                 
-                if t := re.search(rf'<mae>{mae}</mae>',pr):
+                if re.search(rf'<mae>{mae}</mae>',pr):
                     if m := re.search(r'<obs>((.|\n)*)</obs>',pr):
                         i = m.group(1)
                         if re.search(r'(?i:(irmao|irmaos))',i):
@@ -48,7 +48,7 @@ def procuraPai(pai):
             else:
                 processos_avaliados.add(_id_)
 
-                if t := re.search(rf'<pai>{pai}</pai>',pr):
+                if re.search(rf'<pai>{pai}</pai>',pr):
                     if m := re.search(r'<obs>((.|\n)*)</obs>',pr):
                         i = m.group(1)
                         if re.search(r'(?i:(irmao|irmaos))',i):
