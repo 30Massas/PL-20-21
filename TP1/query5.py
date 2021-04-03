@@ -9,7 +9,7 @@ def getProcID(proc):
 
 def getIrmaos(obs):
     l = []
-    if irmaos := re.findall(r'([\w ]*,Irmao(s)?\.( ?Proc\.\d+\.)?)',obs):
+    if irmaos := re.findall(r'([\w ,]*,Irmao(s)?[\w ]*\.( ?Proc\.\d+\.)?)',obs):
         for i in irmaos:
             l.append(i[0].strip())            
     return l
@@ -52,7 +52,7 @@ def Query5():
                         if inf := getIrmaos(obs):
 
                             for i in inf:
-                                i = re.split(r',Irmaos?\. ?',i)
+                                i = re.split(r',Irmaos?[\w ]*\. ?',i)
                                 if i[1] != '':
                                     _bid_ = getProcID(i[1])
                                     processos_avaliados.add(_bid_)
