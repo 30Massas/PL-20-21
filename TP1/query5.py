@@ -4,12 +4,11 @@ from itertools import tee # iterators
 from graphviz import Digraph
 
  
-dot = Digraph(comment="teste")
+def getProcID(proc):
+    if m := re.search(r' ?Proc\.(\d+)\.?',proc):
+        return m.group(1)
 
-processos_avaliados = set()
-f = open('teste.xml', 'r')
-processos = None
-
+"""
 def adicionaPais(name,temp,ano, filho):
     
     for pr in processos:
@@ -29,18 +28,30 @@ def adicionaPais(name,temp,ano, filho):
                             
                             if mae := re.search(r'<mae>((.|\n)*)</mae>',pr):
                                 mae = mae.group(1)
-                                adicionaPais(mae,temp,ano, _id_)
+                                dot.node(mae,mae)
+                                dot.edge(_id_,mae)
                             if pai := re.search(r'<pai>((.|\n)*)</pai>',pr):
                                 pai = pai.group(1)
                                 adicionaPais(pai,temp,ano, _id_)
                         return
-                    
+"""        
+
+def getIrmaos(obs):
+    l = []
+    if irmaos := re.findall(r'([\w ]*,Irmao(s)?\.( ?Proc\.\d+\.)?)',obs):
+        for i in irmaos:
+            l.append(i[0].strip())            
+    return l
+    
 def Query5():
-    
-    
+    count = 0
+    dot = Digraph(comment="teste")
+
+    processos_avaliados = set()
+    f = open('processos.xml', 'r')
+        
     ano = input('Indique o ano que pretende investigar: ')
     
-    global processos
     processos = gf.getProcessosByData(f.read(), ano)
     
     for pr in processos:
@@ -49,68 +60,39 @@ def Query5():
                 pass
             else:
 
-                if filho := re.search(r'<nome>((.|\n)*)</nome>',pr):
+                if nome := re.search(r'<nome>((.|\n)*)</nome>',pr):
+                    nome = nome.group(1)
                     processos_avaliados.add(_id_)
-                    filho = filho.group(1)
-                    dot.node(_id_,filho)
+                    dot.node(nome+_id_,nome)
                     
-                    if mae := re.search(r'<mae>((.|\n)*)</mae>',pr):
+                    mae = re.search(r'<mae>((.|\n)*)</mae>',pr)
+                    if mae:
                         mae = mae.group(1)
-                        temp = set()
-                        temp.add(_id_)
-                        adicionaPais(mae,temp,ano, _id_)
-                    if pai := re.search(r'<pai>((.|\n)*)</pai>',pr):
+                        dot.node(mae,mae)
+                        dot.edge(nome+_id_,mae)
+                    pai = re.search(r'<pai>((.|\n)*)</pai>',pr)
+                    if pai:
                         pai = pai.group(1)
-                        temp = set()
-                        temp.add(_id_)
-                        adicionaPais(pai,temp,ano, _id_)
-    # idBD = 0
-    
-    
-    """
-    for p in processos:
-        pr = p[0]
+                        dot.node(pai,pai)
+                        dot.edge(nome+_id_,pai)
+                        
+                    if obs := re.search(r'<obs>((.|\n)*)</obs>',pr):
+                        obs = obs.group(1)
+                        print()
+                        if inf := getIrmaos(obs):
 
-        if _id_ := gf.getId(pr):
-            if _id_ in processos_avaliados:
-                pass
-            else:
-                processos_avaliados.add(_id_)
-
-                if data := re.search(r'<data>(\d{4})-\d{2}-\d{2}</data>',pr):
-                    dt = data.group(1)
-
-                    if dt == ano:
-                        
-                        if filho := re.search(r'<nome>((.|\n)*)</nome>',pr):
-                            filho = filho.group(1)
-                        
-                            if pai := re.search(r'<pai>((.|\n)*)</pai>',pr):
-                                pai = pai.group(1)
-                            if mae := re.search(r'<mae>((.|\n)*)</mae>',pr):
-                                mae = mae.group(1)
-                            
-                            
-                            if pai and mae:
-                                dot.node(filho+pai+mae,filho)
-                                dot.node(pai+mae,pai)
-                                dot.edge(filho+pai+mae,pai+mae)
-                        
-                                dot.node(mae+pai,mae+pai)
-                                dot.edge(filho+pai+mae,mae+pai)
-                            elif pai:
-                                dot.node(filho+pai,filho)
-                                dot.node(pai,pai)
-                                dot.edge(filho+pai,pai)
-                            elif mae:
-                                dot.node(filho+mae,filho)
-                                dot.node(mae,mae)
-                                dot.edge(filho+mae,mae)
-                        
-                        
-                            idBD+=1
-                   """         
-                                             
+                            for i in inf:
+                                i = re.split(r',Irmaos?\. ?',i)
+                                _bid_ = i[1]
+                                if irmaos := re.split(r' e ',i[0]):
+                                    for mano in irmaos:
+                                        dot.node(mano+_bid_,mano)
+                                        if pai:
+                                            dot.edge(mano+_bid_,pai)
+                                        if mae:
+                                            dot.edge(mano+_bid_,mae)
+                                    
+                     
     g = open('test.gv','r+')
     g.write(dot.source)
     g.close()
