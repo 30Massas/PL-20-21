@@ -9,7 +9,7 @@ import query5 as q5
 
 def switch(i):
     switcher={
-        #0: exit,
+        0: exit,
         1: q1.Query1,
         2: q2.Query2,
         3: q3.Query3,
@@ -36,8 +36,8 @@ def main():
       start = time.time()
       switch(choice)
 
-      time.sleep(3)
       end = time.time()
+      time.sleep(3)
       print()
       print(f'Time elapsed : {end-start} seconds')
 
