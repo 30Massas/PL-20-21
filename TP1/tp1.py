@@ -21,16 +21,16 @@ def switch(i):
 
 def main():
 
-    #choice = -1
+    choice = -1
     
-    #while choice != 0:
+    while choice != 0:
       print('### EXERCÍCIO 2 ###')
       print('1 - Calcular o número de processos por ano; apresente a listagem por ordem cronológica e indique o intervalo de datas em que há registos bem como o número de séculos analisados.\n')
       print('2 - Calcular a frequência de nomes próprios (primeiro nome) e apelidos (último nome) global e mostre os 5 mais frequentes em cada século.\n')
       print('3 - Calcular o número de candidatos (nome principal de cada processo) que têm parentes (irmão, tio, ou primo) eclesiásticos; diga qual o tipo de parentesco mais frequente.\n')
       print('4 - Verificar se o mesmo pai ou a mesma mãe têm mais do que um filho candidato.\n')
       print('5 - Utilizando a linguagem de desenho de grafos DOT4 desenhe todas as árvores genealógicas (com base nos triplos < filho, pai, mãe >) dos candidatos referentes a um ano dado pelo utilizador.\n')
-      #print('0 - Sair do programa.\n')
+      print('0 - Sair do programa.\n')
 
       choice = int (input('Indique a alínea que pretende averiguar: '))
       start = time.time()
