@@ -36,6 +36,7 @@ def main():
       start = time.time()
       switch(choice)
 
+      time.sleep(3)
       end = time.time()
       print()
       print(f'Time elapsed : {end-start} seconds')
