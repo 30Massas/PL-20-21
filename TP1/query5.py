@@ -8,34 +8,6 @@ def getProcID(proc):
     if m := re.search(r' ?Proc\.(\d+)\.?',proc):
         return m.group(1)
 
-"""
-def adicionaPais(name,temp,ano, filho):
-    
-    for pr in processos:
-        if _id_ := gf.getId(pr):
-            if _id_ not in temp:
-                if me := re.search(r'<nome>((.|\n)*)</nome>',pr):
-                    me = me.group(1)
-                    if me == name: # nome igual
-                        temp.add(_id_)
-                        
-                        if _id_ in processos_avaliados:
-                            dot.edge(filho,_id_)
-                        else:
-                            processos_avaliados.add(_id_)
-                            dot.node(_id_,name)
-                            dot.edge(filho,_id_)
-                            
-                            if mae := re.search(r'<mae>((.|\n)*)</mae>',pr):
-                                mae = mae.group(1)
-                                dot.node(mae,mae)
-                                dot.edge(_id_,mae)
-                            if pai := re.search(r'<pai>((.|\n)*)</pai>',pr):
-                                pai = pai.group(1)
-                                adicionaPais(pai,temp,ano, _id_)
-                        return
-"""        
-
 def getIrmaos(obs):
     l = []
     if irmaos := re.findall(r'([\w ]*,Irmao(s)?\.( ?Proc\.\d+\.)?)',obs):
@@ -94,8 +66,7 @@ def Query5():
                                             dot.edge(mano+_bid_,pai+auxID)
                                         if mae:
                                             dot.edge(mano+_bid_,mae+auxID)
-                startID += 1
-                                    
+                startID += 1                         
                      
     g = open('test.gv','r+')
     g.write(dot.source)
