@@ -58,7 +58,7 @@ def Query5():
                                     processos_avaliados.add(_bid_)
                                 else :
                                     _bid_ = i[1]
-                                if irmaos := re.split(r' e ',i[0]):
+                                if irmaos := re.split(r'( e |,)',i[0]):
                                     for mano in irmaos:
                                         dot.node(mano+_bid_,mano)
                                         if pai:
