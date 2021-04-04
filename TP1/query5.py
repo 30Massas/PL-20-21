@@ -9,9 +9,9 @@ def getProcID(proc):
 
 def getIrmaos(obs):
     l = []
-    if irmaos := re.findall(r'([\w ,]*,Irmao(s)?[\w ]*\.( ?Proc\.\d+\.)?)',obs):
+    if irmaos := re.findall(r'([\w ,\n]*,Irmao(s)?[\w \n]*\.( ?Proc\.\d+\.)?)',obs):
         for i in irmaos:
-            l.append(i[0].strip())            
+            l.append(re.sub(r'\s+',r' ',i[0]))            
     return l
     
 def Query5():
@@ -50,7 +50,6 @@ def Query5():
                     if obs := re.search(r'<obs>((.|\n)*)</obs>',pr):
                         obs = obs.group(1)
                         if inf := getIrmaos(obs):
-
                             for i in inf:
                                 i = re.split(r',Irmaos?[\w ]*\. ?',i)
                                 if i[1] != '':
@@ -60,11 +59,13 @@ def Query5():
                                     _bid_ = i[1]
                                 if irmaos := re.split(r'( e |,)',i[0]):
                                     for mano in irmaos:
-                                        dot.node(mano+_bid_,mano)
-                                        if pai:
-                                            dot.edge(mano+_bid_,pai+auxID)
-                                        if mae:
-                                            dot.edge(mano+_bid_,mae+auxID)
+                                        if mano != ' e ':
+                                            dot.node(mano+_bid_,mano)
+                                            if pai:
+                                                dot.edge(mano+_bid_,pai+auxID)
+                                            if mae:
+                                                dot.edge(mano+_bid_,mae+auxID)
+                                
                 startID += 1                         
                      
     g = open('gen_trees.gv','w+')
