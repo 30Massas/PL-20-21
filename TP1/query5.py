@@ -4,14 +4,16 @@ from graphviz import Digraph
 
  
 def getProcID(proc):
+    proc = re.sub(r'\s+',' ',proc)
     if m := re.search(r' ?Proc\.(\d+)\.?',proc):
         return m.group(1)
 
 def getIrmaos(obs):
+    obs = re.sub(r'\s+',r' ',obs)
     l = []
-    if irmaos := re.findall(r'([\w ,\n]*,Irmao(s)?[\w \n]*\.( ?Proc\.\d+\.)?)',obs):
+    if irmaos := re.findall(r'([\w ,]*,Irmao(s)?[\w ]*\.( ?Proc\.\d+\.)?)',obs):
         for i in irmaos:
-            l.append(re.sub(r'\s+',r' ',i[0]))            
+            l.append(i[0])   
     return l
     
 def Query5():
