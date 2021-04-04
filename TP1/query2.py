@@ -125,7 +125,7 @@ def Query2():
     for sec in range(minSec,maxSec+1):
         listApelidos = []
         for nome in apelidos:
-        # print de nomes próprios
+        # print de apelidos
             if count := apelidos.get(nome).get(sec):
                 listApelidos.append((nome,count))
                 
