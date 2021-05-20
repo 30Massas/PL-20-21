@@ -2,25 +2,34 @@ import ply.lex as lex
 import sys
 
 #tokens = ['NUM','ID','POTENCIA','EQUIV','REPEATUNTIL']
-tokens = ['BEGIN','DECL','INSTR','NUM','ID','int','print','END']
 
 
-literals = ['=','+','-','/','*',
-            '(',')',';',',',
-#            '<','>',
-            '{','}']
+reserved = {
+    'DECL' : 'DECL',
+    'int' : 'int',
+    'INSTR' : 'INSTR',
+    'print' : 'print' 
+}
 
+literals = ['{','}','=','+','-','/','*',
+            '(',')',';',',']
+
+tokens = ['NUM','ID'] + list(reserved.values())
 #t_EQUIV = r'=='
-t_BEGIN = r'BEGIN'
-t_DECL = r'DECL'
-t_ID = r'\w'
-t_NUM = r'\d+'
-t_int = r'int'
-t_INSTR = r'INSTR'
-t_print = r'print'
+
+def t_ID(t):
+    r'\w+'
+    t.type = reserved.get(t.value,'ID')
+    return t
+
+def t_NUM(t):
+    r'\d+'
+    t.type = reserved.get(t.value,'NUM')
+    t.value = int(t.value)
+    return t
+
 #t_POTENCIA = r'potencia'
 #t_REPEATUNTIL = r'repeatuntil'
-t_END = r'END'
 
 '''
 
@@ -91,3 +100,12 @@ def t_error(t):
 
 #build the lexer
 lexer = lex.lex()
+
+# file = open('teste.txt')
+
+# for line in file:
+#     lexer.input(line)
+#     tok = lexer.token()
+#     while tok:
+#         print(tok)
+#         tok = lexer.token()

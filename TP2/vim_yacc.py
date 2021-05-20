@@ -24,18 +24,20 @@ writei
 """
 
 
-# Programa -> BEGIN '{' Content '}' END
-#
-# Content -> Decl Instr 
+# Programa -> Decl Instr
 #
 # Decl -> DECL '{' Declaracoes '}'
 #
-# Declaracoes -> €
-#              | int id ListaIds
-#              | int id '=' num ListaIds
+# Declaracoes -> Declaracoes Declaracao
+#              | Declaracao
 #
+# Declaracao -> €
+#              | ListaIdsSimples RestoIdsSimples
+#              | ListaIdsDeclarado RestoIdsDeclarado
+#
+# ListaIdsSimples -> int id
 #     
-# ListaIds -> ';'
+# RestoIds -> ';'
 #           | ',' id ListaIds
 #           | ',' id '=' num ListaIds
 #
@@ -59,32 +61,33 @@ writei
 #        | id
 #
 
-
 def p_Programa(p):
-    "Programa : BEGIN '{' Content '}' END"
-
-def p_Content(p):
-    "Content : Decl Instr"
-
-def p_Content_Empty(p):
-    "Content : "
+    "Programa : Decl Instr"
 
 def p_Decl(p):
-    "Decl : DECL '{' Declaracoes '}'"
+    "Decl : DECL '{' Declaracoes '}' "
     
+# def p_Decl_Empty(p):
+#     "Decl : "    
 
-def p_Declaracoes_Simples(p):
-    "Declaracoes : int ID ';'" #ListaIds"
+def p_Declaracoes(p):
+    "Declaracoes : Declaracoes Declaracao"
+
+def p_Declaracoes_Unica(p):
+    "Declaracoes : Declaracao"
+
+def p_Declaracao_Simples(p):
+    "Declaracao : int ID ';' " #ListaIds"
     p.parser.fileOut.write(f'pushi 0\n')
     p.parser.registers[p[2]] = p.parser.registerindex
     p.parser.registerindex += 1
 
-def p_Declaracoes_Valor(p):
-    "Declaracoes : int ID '=' Exp ';'"
+def p_Declaracao_Valor(p):
+    "Declaracao : int ID '=' Exp ';' "
     p.parser.fileOut.write(f'pushi {p[4]}')
 
-def p_Declaracoes_Empty(p):
-    "Declaracoes : "
+def p_Declaracao_Empty(p):
+    "Declaracao : "
 
 # def p_ListaIds_End(p):
 #     "ListaIds : ';'"
@@ -96,23 +99,32 @@ def p_Declaracoes_Empty(p):
 #     "ListaIDs : ',' ID '=' NUM ListaIds"
 
 def p_Instr(p):
-    "Instr : INSTR '{' Instrucoes '}'"
+    "Instr : INSTR '{' Instrucoes '}' "
     p.parser.fileOut.write(f'start\n{p[3]}\nstop')
 
+# def p_Instr_Empty(p):
+#     "Instr : "
+
 def p_Instrucoes(p):
-    "Instrucoes : print '(' Exp ')' ';'"
+    "Instrucoes : Instrucoes Instrucao"
+
+def p_Instrucoes_Unica(p):
+    "Instrucoes : Instrucao"
+
+def p_Instrucao(p):
+    "Instrucao : print '(' Exp ')' ';'"
     p.parser.fileOut.write(f'pushg {p.parser.registers.get(p[3])}\nwritei\n')
 
-def p_Instrucoes_Empty(p):
-    "Instrucoes : "
+def p_Instrucao_Empty(p):
+    "Instrucao : "
 
 def p_Exp_Termo_add(p):
     "Exp : Exp '+' Termo"
-    p[0] = p[1] + p[3]
+    p[0] = p[1] + p[3] + 'add\n'
 
 def p_Exp_Termo_sub(p):
     "Exp : Exp '-' Termo"
-    p[0] = p[1] - p[3]
+    p[0] = p[1] + p[3] + 'sub\n'
 
 def p_Exp_Termo(p):
     "Exp : Termo"
@@ -120,15 +132,14 @@ def p_Exp_Termo(p):
 
 def p_Termo_Fator_mul(p):
     "Termo : Termo '*' Fator"
-    p[0] = p[1] * p[3]
+    p[0] = p[1] + p[3] + 'mul\n'
 
 def p_Termo_Fator_div(p):
     "Termo : Termo '/' Fator"
-    if (p[3] != 0):
-        p[0] = p[1] / p[3]
+    if (p[3] != '0'):
+        p[0] = p[1] + p[3] + 'div\n'
     else:
-        print('O was found as a factor, continuing with 0.')
-        p[0] = 0
+        p[0] = 'pushi 0\n'
 
 def p_Termo_Fator(p):
     "Termo : Fator"
@@ -136,11 +147,11 @@ def p_Termo_Fator(p):
 
 def p_Fator_id(p):
     "Fator : ID"
-    p[0] = p.parser.registers.get(p[1])
+    p[0] = str(p.parser.registers.get(p[1]))
 
 def p_Fator_num(p):
     "Fator : NUM"
-    p[0] = int(p[1])
+    p[0] = 'pushi' + p[1] + '\n'
 
 def p_Fator_Exp(p):
     "Fator : '(' Exp ')'"
@@ -158,9 +169,11 @@ parser.fileOut = open('testeLing.vm','w+')
 
 # Read input and parse it
 # Line by line
-file = open(f"{input('Introduce path to program to be compiled: ')}")
+file = open(f"{input('Introduce path to program to be compiled: ')}",'r')
 
+content = ''
 for linha in file:
-    parser.success = True
-    result = parser.parse(linha)
+    content += linha
     #print(result)
+
+parser.parse(content)
