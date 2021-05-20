@@ -3,15 +3,13 @@ from vim_tokens import tokens
 import sys
 
 """
-// print 2-3*3+5
+// print(2-3*3+5)
 
-BEGIN{
-    DECL{
-    }
-    INSTR{
-        print(2-3*3+5)
-    }
-}END
+DECL
+ENDDECL
+INSTR
+print(2-3*3+5)
+ENDINSTR
 
 pushi 2       
 pushi 3           
@@ -24,126 +22,109 @@ writei
 """
 
 
-# Programa -> Decl Instr
-#
-# Decl -> DECL '{' Declaracoes '}'
-#
-# Declaracoes -> Declaracoes Declaracao
-#              | Declaracao
-#
-# Declaracao -> €
-#              | ListaIdsSimples RestoIdsSimples
-#              | ListaIdsDeclarado RestoIdsDeclarado
-#
-# ListaIdsSimples -> int id
-#     
-# RestoIds -> ';'
-#           | ',' id ListaIds
-#           | ',' id '=' num ListaIds
-#
-#
-# Instr -> INSTR '{' Instrucoes '}'
-# 
-# Instrucoes -> €
-#             | print '(' Exp ')' ';'
-#                   
-#
-# Exp -> Exp '+' Termo
-#      | Exp '-' Termo
-#      | Termo
-#
-# Termo -> Termo '*' Fator
-#        | Termo '/' Fator
-#        | Fator
-#
-# Fator -> '(' Exp ')'
-#        | num
-#        | id
-#
-
 def p_Programa(p):
     "Programa : Decl Instr"
 
+
 def p_Decl(p):
-    "Decl : DECL '{' Declaracoes '}' "
-    
-# def p_Decl_Empty(p):
-#     "Decl : "    
+    "Decl : DECL Declaracoes ENDDECL "   
 
 def p_Declaracoes(p):
-    "Declaracoes : Declaracoes Declaracao"
+    "Declaracoes : Declaracoes Declaracao "
+    p[0] = str(p[1]) + '\n' + str(p[2])
 
-def p_Declaracoes_Unica(p):
-    "Declaracoes : Declaracao"
+def p_Declaracoes_Empty(p):
+    "Declaracoes : "
 
-def p_Declaracao_Simples(p):
-    "Declaracao : int ID ';' " #ListaIds"
-    p.parser.fileOut.write(f'pushi 0\n')
-    p.parser.registers[p[2]] = p.parser.registerindex
+def p_Declaracao_Vars_Simples(p):
+    "Declaracao : int Vars ';' "
+ 
+def p_Declaracao_Vars_Valor(p):
+    "Declaracao : int VarsDeclaradas ';' "
+
+def p_Vars(p):
+    "Vars : Vars Var"
+    p[0] = str(p[1]) + '\n' + str(p[2])
+
+def p_Vars_Empty(p):
+    "Vars : Var "
+    p[0] = str(p[1])
+
+def p_Var_ID(p):
+    "Var : ID"
+    p[0] = 'pushi 0\n'
+    p.parser.registers[p[1]] = p.parser.registerindex
     p.parser.registerindex += 1
 
-def p_Declaracao_Valor(p):
-    "Declaracao : int ID '=' Exp ';' "
-    p.parser.fileOut.write(f'pushi {p[4]}')
+def p_Var_Array(p):
+    "Var : '[' NUM ']' ID"
+    p[0] = 'pushn ' + str(p[2]) + '\n'
+    p.parser.registers[p[1]] = p.parser.registerindex
+    p.parser.registerindex += p[2]
 
-def p_Declaracao_Empty(p):
-    "Declaracao : "
+def p_VarsDeclaradas(p):
+    "VarsDeclaradas : VarsDeclaradas VarDeclarada"
+    p[0] = str(p[1]) + str(p[2])
 
-# def p_ListaIds_End(p):
-#     "ListaIds : ';'"
+def p_VarsDeclaradas_Empty(p):
+    "VarsDeclaradas : VarDeclarada"
+    p[0] = str(p[1])
 
-# def p_ListaIds_Simples(p):
-#     "ListaIds : ',' ID ListaIds"
+def p_VarDeclarada(p):
+    "VarDeclarada : ID '=' Exp"
+    p[0] = 'pushi ' + str(p[3]) + '\n'
+    p.parser.registers[p[1]] = p.parser.registerindex
+    p.parser.registers[p[1]][p.parser.registerindex] = p[3]
+    p.parser.registerindex += 1
 
-# def p_ListaIds_Valor(p):
-#     "ListaIDs : ',' ID '=' NUM ListaIds"
+
 
 def p_Instr(p):
-    "Instr : INSTR '{' Instrucoes '}' "
-    p.parser.fileOut.write(f'start\n{p[3]}\nstop')
-
-# def p_Instr_Empty(p):
-#     "Instr : "
+    "Instr : INSTR Instrucoes ENDINSTR "
+    p[0] = f'start\n{p[3]}\nstop'
 
 def p_Instrucoes(p):
     "Instrucoes : Instrucoes Instrucao"
+    p[0] = str(p[1]) + '\n' + str(p[2])
 
-def p_Instrucoes_Unica(p):
-    "Instrucoes : Instrucao"
-
-def p_Instrucao(p):
+def p_Instrucoes_Empty(p):
+    "Instrucoes : "
+    pass
+    
+def p_Instrucao_print(p):
     "Instrucao : print '(' Exp ')' ';'"
-    p.parser.fileOut.write(f'pushg {p.parser.registers.get(p[3])}\nwritei\n')
+    p[0] = 'writei' + str(p[3]) + '\n'
 
-def p_Instrucao_Empty(p):
-    "Instrucao : "
+def p_Instrucao_read(p):
+    "Instrucao : input '(' ')' ';'"
+    p[0] = 'read\natoi\nstoren\n'
 
 def p_Exp_Termo_add(p):
     "Exp : Exp '+' Termo"
-    p[0] = p[1] + p[3] + 'add\n'
+    p[0] = str(p[1]) + str(p[3]) + 'add\n'
 
 def p_Exp_Termo_sub(p):
     "Exp : Exp '-' Termo"
-    p[0] = p[1] + p[3] + 'sub\n'
+    p[0] = str(p[1]) + str(p[3])+ 'sub\n'
 
 def p_Exp_Termo(p):
     "Exp : Termo"
-    p[0] = p[1]
+    p[0] = str(p[1])
 
 def p_Termo_Fator_mul(p):
     "Termo : Termo '*' Fator"
-    p[0] = p[1] + p[3] + 'mul\n'
+    p[0] = str(p[1]) + str(p[3]) + 'mul\n'
 
 def p_Termo_Fator_div(p):
     "Termo : Termo '/' Fator"
     if (p[3] != '0'):
-        p[0] = p[1] + p[3] + 'div\n'
+        p[0] = str(p[1]) + str(p[3]) + 'div\n'
     else:
         p[0] = 'pushi 0\n'
 
 def p_Termo_Fator(p):
     "Termo : Fator"
-    p[0] = p[1]
+    p[0] = str(p[1])
 
 def p_Fator_id(p):
     "Fator : ID"
@@ -151,11 +132,11 @@ def p_Fator_id(p):
 
 def p_Fator_num(p):
     "Fator : NUM"
-    p[0] = 'pushi' + p[1] + '\n'
+    p[0] = 'pushi' + str(p[1]) + '\n'
 
 def p_Fator_Exp(p):
     "Fator : '(' Exp ')'"
-    p[0] = p[1]
+    p[0] = str(p[2])
 
 def p_error(p):
     print(f'Syntax Error: {p}')

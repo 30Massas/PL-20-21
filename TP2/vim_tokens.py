@@ -8,14 +8,16 @@ reserved = {
     'DECL' : 'DECL',
     'int' : 'int',
     'INSTR' : 'INSTR',
-    'print' : 'print' 
+    'print' : 'print',
+    'ENDDECL' : 'ENDDECL',
+    'ENDINSTR' : 'ENDINSTR',
+    'input' : 'input'
 }
 
-literals = ['{','}','=','+','-','/','*',
-            '(',')',';',',']
+literals = ['=','+','-','/','*',
+            '(',')',';',',' ,'[', ']']
 
 tokens = ['NUM','ID'] + list(reserved.values())
-#t_EQUIV = r'=='
 
 def t_ID(t):
     r'\w+'
@@ -27,9 +29,6 @@ def t_NUM(t):
     t.type = reserved.get(t.value,'NUM')
     t.value = int(t.value)
     return t
-
-#t_POTENCIA = r'potencia'
-#t_REPEATUNTIL = r'repeatuntil'
 
 '''
 
