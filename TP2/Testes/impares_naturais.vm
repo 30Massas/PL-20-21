@@ -1,0 +1,28 @@
+pushi 0
+pushi 1
+start
+r0:
+read
+atoi
+storeg 1
+pushg 1
+pushi 2
+mod
+pushi 0
+equal
+not
+jz endif0
+pushg 0
+pushi 1
+add
+storeg 0
+pushg 1
+writei
+endif0:
+pushg 1
+pushi 0
+equal
+jz r0
+pushg 0
+writei
+stop

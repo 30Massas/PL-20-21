@@ -1,0 +1,42 @@
+pushi 0
+pushi 0
+pushi 0
+pushi 0
+start
+read
+atoi
+storeg 0
+read
+atoi
+storeg 1
+read
+atoi
+storeg 2
+read
+atoi
+storeg 3
+pushg 0
+pushg 1
+equal
+pushg 1
+pushg 2
+equal
+add
+pushi 2
+equal
+pushg 2
+pushg 3
+equal
+add
+pushi 2
+equal
+jz else0
+pushi 1
+writei
+jump endelse0
+else0:
+pushi 0
+writei
+jump endelse0
+endelse0:
+stop

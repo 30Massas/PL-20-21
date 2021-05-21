@@ -240,7 +240,7 @@ parser.registerindex = 0
 parser.ifs = 0
 parser.elses = 0
 parser.ciclos = 0
-parser.fileOut = open('testeLing.vm','w+')
+parser.fileOut = open('teste.vm','w+')
 
 # Read input and parse it
 # Line by line

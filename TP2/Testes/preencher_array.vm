@@ -1,0 +1,39 @@
+pushn 5
+pushi 0
+pushi 0
+pushi 5
+start
+r0:
+read
+atoi
+storeg 5
+pushgp
+pushi 0
+padd
+pushg 6
+pushg 5
+storen
+pushg 6
+pushi 1
+add
+storeg 6
+pushg 6
+pushg 7
+equal
+jz r0
+r1:
+pushgp
+pushi 0
+padd
+pushg 7
+loadn
+writei
+pushg 7
+pushi 1
+sub
+storeg 7
+pushg 7
+pushi 0
+inf
+jz r1
+stop
