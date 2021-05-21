@@ -52,6 +52,13 @@ def p_Var_Array(p):
     p.parser.registers[p[4]] = p.parser.registerindex
     p.parser.registerindex += int(p[2])
 
+def p_Var_Matrix(p):
+    "Var : '[' NUM ']' '[' NUM ']' ID"
+    p[0] = 'pushn ' + str(int(p[2])*int(p[5])) + '\n'
+    p.parser.registers[p[7]] = p.parser.registerindex
+    p.parser.registerindex += int(p[2])*int(p[5])
+    p.parser.matrizes[p[7]] = int(p[5])
+
 def p_VarsDeclaradas(p):
     "VarsDeclaradas : VarsDeclaradas ',' VarDeclarada"
     p[0] = p[1] + p[3]
@@ -82,21 +89,25 @@ def p_Instrucoes_Empty(p):
     "Instrucoes : "
     p[0] = ""
     
-def p_Instrucao_print(p):
+def p_Instrucao_Print(p):
     "Instrucao : print '(' Exp ')' ';'"
     p[0] = p[3] + 'writei' + '\n'
 
-def p_Instrucao_read(p):
+def p_Instrucao_Read(p):
     "Instrucao : input '(' ID ')' ';'"
     p[0] = 'read\natoi\n' + 'storeg ' + str(p.parser.registers.get(p[3])) + '\n'
 
-def p_Instrucao_atrib(p):
+def p_Instrucao_Atrib(p):
     "Instrucao : ID EQUALS Exp ';'"
     p[0] = p[3] + 'storeg ' + str(p.parser.registers.get(p[1])) + '\n'
 
-def p_Instrucao_atrib_array(p):
+def p_Instrucao_Atrib_Array(p):
     "Instrucao : ID '[' Exp ']' EQUALS Exp ';'"
     p[0] = 'pushgp\npushi ' + str(p.parser.registers.get(p[1]))  + '\npadd\n' + p[3] + p[6] + 'storen\n'
+
+def p_Instrucao_Atrib_Matrix(p):
+    "Instrucao : ID '[' Exp ']' '[' Exp ']' EQUALS Exp ';'"
+    p[0] = 'pushgp\npushi ' + str(p.parser.registers.get(p[1])) + '\npadd\n' +  p[6] + p[3] + 'pushi ' + str(p.parser.matrizes[p[1]]) + '\nmul\nadd\n'  + p[9] + 'storen\n'
 
 def p_Instrucao_If(p):
     "Instrucao : IF '(' Conds ')' Instrucoes ENDIF "
@@ -201,9 +212,9 @@ def p_Fator_ID_Array(p):
     "Fator : ID '[' Exp ']' "
     p[0] = 'pushgp\npushi ' + str(p.parser.registers.get(p[1])) + '\npadd\n' + p[3] + 'loadn\n'
 
-# def p_Fator_ID_Matrix(p):
-#     "Fator : ID '[' Exp ']' '[' Exp ']' "
-#     p[0] = 
+def p_Fator_ID_Matrix(p):
+    "Fator : ID '[' Exp ']' '[' Exp ']' "
+    p[0] = 'pushgp\npushi ' + str(p.parser.registers.get(p[1])) + '\npadd\n' + p[6] + p[3] + 'pushi ' + str(p.parser.matrizes[p[1]]) + '\nmul\nadd\n' + 'loadn\n'
 
 def p_Fator_num(p):
     "Fator : NUM"
@@ -224,6 +235,7 @@ def p_error(p):
 # Build parser
 parser = yacc.yacc()
 parser.registers = {}
+parser.matrizes = {}
 parser.registerindex = 0
 parser.ifs = 0
 parser.elses = 0
