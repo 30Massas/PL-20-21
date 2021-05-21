@@ -17,7 +17,9 @@ reserved = {
     'ELSE' : 'ELSE',
     'ENDELSE' : 'ENDELSE',
     'AND' : 'AND',
-    'OR'  : 'OR'
+    'OR'  : 'OR',
+    'REPEAT' : 'REPEAT',
+    'UNTIL' : 'UNTIL'
 }
 
 literals = ['(',')',';',',','[', ']']

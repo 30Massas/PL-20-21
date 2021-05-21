@@ -112,9 +112,10 @@ def p_Else(p):
     "Else : ELSE Instrucoes ENDELSE"
     p[0] = p[2]
 
-# def p_Instrucao_Repeat_Until(p):
-#     "Instrucao : REPEAT Instrucoes UNTIL Conds"
-#     p[0] = p[2] + p[4]
+def p_Instrucao_Repeat_Until(p):
+    "Instrucao : REPEAT Instrucoes UNTIL '(' Conds ')' "
+    p[0] = f'r{p.parser.ciclos}:\n{p[2]}{p[5]}jz r{p.parser.ciclos}\n'
+    p.parser.ciclos += 1
 
 #############################################################
 #                      Bloco Condições                      #
@@ -227,6 +228,7 @@ parser.registers = {}
 parser.registerindex = 0
 parser.ifs = 0
 parser.elses = 0
+parser.ciclos = 0
 parser.fileOut = open('testeLing.vm','w+')
 
 # Read input and parse it
