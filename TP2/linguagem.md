@@ -8,7 +8,7 @@ atribuir expressoes a variaveis
 
 efetuar instruções condicionais
 
-efetuar isntruções ciclicas -> minimo - repeat-until, adicional - while-do, for-do
+efetuar instruções ciclicas -> minimo - repeat-until, adicional - while-do, for-do
 
 
 ```

@@ -1,0 +1,15 @@
+DECL
+    int a,b,c,d;
+ENDDECL
+INSTR
+    input(a);
+    input(b);
+    input(c);
+    input(d);
+    IF(a==b AND b==c AND c==d)
+        print(1);
+    ELSE
+        print(0);
+    ENDELSE
+    ENDIF
+ENDINSTR
