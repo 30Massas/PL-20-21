@@ -1,0 +1,16 @@
+DECL
+    int[5] valores;
+    int valor,i; 
+    int max=5;
+ENDDECL
+INSTR
+    REPEAT
+        input(valor);
+        valores[i] = valor;
+        i = i+1;
+    UNTIL (i==max)
+    REPEAT
+        print(valores[max]);
+        max = max-1;
+    UNTIL (max<0)
+ENDINSTR

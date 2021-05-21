@@ -1,0 +1,13 @@
+DECL
+    int n,num;
+    int prod=1;
+ENDDECL
+INSTR
+    input(n);
+    REPEAT
+        input(num);
+        prod = prod * num;
+        n = n-1;
+    UNTIL (n==0)
+    print(prod);
+ENDINSTR

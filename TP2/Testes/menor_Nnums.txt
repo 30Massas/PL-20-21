@@ -1,0 +1,15 @@
+DECL
+    int n,num;
+    int min=9999999;
+ENDDECL
+INSTR
+    input(n);
+    REPEAT
+        input(num);
+        IF(num<min)
+            min = num;
+        ENDIF
+        n = n-1;
+    UNTIL (n==0)
+    print(min);
+ENDINSTR

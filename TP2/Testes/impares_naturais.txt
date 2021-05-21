@@ -1,0 +1,14 @@
+DECL
+    int count;
+    int num=1;
+ENDDECL
+INSTR
+    REPEAT
+        input(num);
+        IF(num%2!=0)
+            count = count + 1;
+            print(num);
+        ENDIF
+    UNTIL (num==0)
+    print(count);
+ENDINSTR

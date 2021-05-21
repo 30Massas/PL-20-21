@@ -157,11 +157,6 @@ def p_Cond_Lesser_Equal(p):
     "Cond : Exp LESSEREQUAL Exp"
     p[0] = p[1] + p[3] + 'infeq\n'
 
-#############################################################
-#                        Bloco Ciclos                       #
-#############################################################
-
-
 
 #############################################################
 #                      Bloco Expressões                     #
@@ -198,13 +193,17 @@ def p_Termo_Fator(p):
     "Termo : Fator"
     p[0] = p[1]
 
-def p_Fator_id(p):
+def p_Fator_ID(p):
     "Fator : ID"
     p[0] = 'pushg ' + str(p.parser.registers.get(p[1])) + '\n'
 
-def p_Fator_id_array(p):
+def p_Fator_ID_Array(p):
     "Fator : ID '[' Exp ']' "
     p[0] = 'pushgp\npushi ' + str(p.parser.registers.get(p[1])) + '\npadd\n' + p[3] + 'loadn\n'
+
+# def p_Fator_ID_Matrix(p):
+#     "Fator : ID '[' Exp ']' '[' Exp ']' "
+#     p[0] = 
 
 def p_Fator_num(p):
     "Fator : NUM"
