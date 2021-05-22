@@ -2,6 +2,71 @@ import ply.yacc as yacc
 from vim_tokens import tokens
 import sys
 
+# Programa -> Decl Instr
+#
+# Decl -> DECL Declaracoes ENDDECL
+#
+# Declaracoes -> Declaracoes Declaracao
+#              |
+#
+# Declaracao -> int Vars ;
+#             | int VarsDeclaradas
+#
+# Vars -> Vars , Var
+#       | Var
+#
+# VarsDeclaradas -> VarsDeclaradas , VarDeclarada
+#                 | VarDeclarada
+#
+# Var -> ID
+#      | [ NUM ] ID
+#      | [ NUM ] [ NUM ] ID
+#
+# VarDeclarada -> ID EQUALS Exp
+#
+# Instr -> INSTR Instrucoes ENDINSTR
+#
+# Instrucoes -> Instrucoes Instrucao
+#             | 
+#
+# Instrucao -> print ( Exp ) ;
+#            | input ( ID ) ;
+#            | ID EQUALS Exp ;
+#            | ID [ Exp ] EQUALS Exp ;
+#            | ID [ Exp ] [ Exp ] EQUALS Exp ;
+#            | IF ( Conds ) Instrucoes ENDIF 
+#            | IF ( Conds ) Instrucoes Else ENDIF 
+#            | REPEAT Instrucoes UNTIL ( Conds )
+#
+# Else -> ELSE Instrucoes ENDELSE
+#
+# Conds -> Conds AND Cond
+#        | Conds OR Cond
+#        | Cond
+#
+# Cond -> Exp EQUIVALENT Exp
+#       | Exp DIFFERENT Exp
+#       | Exp GREATER Exp
+#       | Exp GREATEREQUAL Exp
+#       | Exp LESSER Exp
+#       | Exp LESSEREQUAL Exp
+#
+# Exp -> Exp ADD Termo
+#      | Exp SUB Termo
+#      | Termo
+#
+# Termo -> Termo MUL Fator
+#        | Termo DIV Fator
+#        | Termo MOD Fator
+#        | Fator
+#
+# Fator -> ( Exp )
+#        | NUM
+#        | ID
+#        | ID [ Exp ]
+#        | ID [ Exp ] [ Exp ]
+
+
 #############################################################
 #                       Main Program                        #
 #############################################################
@@ -234,12 +299,12 @@ def p_error(p):
 
 # Build parser
 parser = yacc.yacc()
-parser.registers = {}
-parser.matrizes = {}
-parser.registerindex = 0
-parser.ifs = 0
-parser.elses = 0
-parser.ciclos = 0
+parser.registers = {} # id : offset
+parser.matrizes = {} # id : tamanho das colunas 
+parser.registerindex = 0 # valor do offset
+parser.ifs = 0 # total de ifs
+parser.elses = 0 # total de elses
+parser.ciclos = 0 # total de ciclos
 parser.fileOut = open('teste.vm','w+')
 
 # Read input and parse it

@@ -1,8 +1,4 @@
 import ply.lex as lex
-import sys
-
-#tokens = ['NUM','ID','POTENCIA','EQUIV','REPEATUNTIL']
-
 
 reserved = {
     'DECL' : 'DECL',
@@ -95,69 +91,9 @@ def t_EQUALS(t):
     return t
 
 def t_NUM(t):
-    r'-?\d+'
+    r'\-?\d+'
     t.type = reserved.get(t.value,'NUM')
     return t
-
-'''
-
-BLOCO DECLARAÇÕES
-int x;
-int ow;
-
-
-BLODO DE INSTRUÇÕES
-
-potencia(2,3)
-
-POTENCIAL LINGUAGEM
-
-{ || BEGIN // start
-
-    DECL
-    {
-        int a,b,c,d;
-    }
-
-    INSTR
-    {
-        a = input();
-        b = input();
-        c = input();
-        d = input();
-
-        if(a==b){
-            if(b==c){
-                if(c==d){
-                    print(1);
-                }
-                else{
-                    print(0);
-                }
-            }
-            else{
-                print(0);
-            }
-        }
-        else{
-            print(0);
-        }        
-    }
-
-} || END // stop
-
-EXEMPLO
-
-    int a,b,c,d
-
-    read(a) -> Compilador pede ao utilizador para introduzir valor 
-    read(b)
-    read(c)
-    read(d)
-    
-    RESTO DO CODIGO
-
-'''
 
 t_ignore = " \t\n"
 
