@@ -29,7 +29,7 @@ def p_Declaracao_Variaveis(p):
     p[0] = p[2]
 
 def p_Declaracao_Arrays(p):
-    "Declaracao : int Arrays ';'" 
+    "Declaracao : int Array ';'" 
     p[0] = p[2]   
 
 def p_Variaveis(p):
@@ -48,13 +48,13 @@ def p_Variavel_VarsDeclaradas(p):
     "Variavel : VarDeclarada"
     p[0] = p[1]
 
-def p_Arrays(p):
-    "Arrays : Arrays Array"
-    p[0] = p[1] + p[2]
+# def p_Arrays(p):
+#     "Arrays : Arrays Array"
+#     p[0] = p[1] + p[2]
 
-def p_Arrays_Unica(p):
-    "Arrays : Array"
-    p[0] = p[1]
+# def p_Arrays_Unica(p):
+#     "Arrays : Array"
+#     p[0] = p[1]
 
 def p_Array_Uma_Dimensao(p):
     "Array : ArrayDimensaoSimples"
