@@ -15,7 +15,10 @@ reserved = {
     'AND' : 'AND',
     'OR'  : 'OR',
     'REPEAT' : 'REPEAT',
-    'UNTIL' : 'UNTIL'
+    'UNTIL' : 'UNTIL',
+    'WHILE' : 'WHILE',
+    'DO' : 'DO',
+    'ENDWHILE' : 'ENDWHILE'
 }
 
 literals = ['(',')',';',',','[', ']']
@@ -84,16 +87,16 @@ def t_LESSER(t):
     t.type = reserved.get(t.value, 'LESSER')
     return t
 
-
 def t_EQUALS(t):
     r'='
     t.type = reserved.get(t.value,'EQUALS')
     return t
 
 def t_NUM(t):
-    r'\-?\d+'
+    r'-?\d+'
     t.type = reserved.get(t.value,'NUM')
     return t
+
 
 t_ignore = " \t\n"
 

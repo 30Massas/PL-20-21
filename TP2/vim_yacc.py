@@ -2,71 +2,6 @@ import ply.yacc as yacc
 from vim_tokens import tokens
 import sys
 
-# Programa -> Decl Instr
-#
-# Decl -> DECL Declaracoes ENDDECL
-#
-# Declaracoes -> Declaracoes Declaracao
-#              |
-#
-# Declaracao -> int Vars ;
-#             | int VarsDeclaradas
-#
-# Vars -> Vars , Var
-#       | Var
-#
-# VarsDeclaradas -> VarsDeclaradas , VarDeclarada
-#                 | VarDeclarada
-#
-# Var -> ID
-#      | [ NUM ] ID
-#      | [ NUM ] [ NUM ] ID
-#
-# VarDeclarada -> ID EQUALS Exp
-#
-# Instr -> INSTR Instrucoes ENDINSTR
-#
-# Instrucoes -> Instrucoes Instrucao
-#             | 
-#
-# Instrucao -> print ( Exp ) ;
-#            | input ( ID ) ;
-#            | ID EQUALS Exp ;
-#            | ID [ Exp ] EQUALS Exp ;
-#            | ID [ Exp ] [ Exp ] EQUALS Exp ;
-#            | IF ( Conds ) Instrucoes ENDIF 
-#            | IF ( Conds ) Instrucoes Else ENDIF 
-#            | REPEAT Instrucoes UNTIL ( Conds )
-#
-# Else -> ELSE Instrucoes ENDELSE
-#
-# Conds -> Conds AND Cond
-#        | Conds OR Cond
-#        | Cond
-#
-# Cond -> Exp EQUIVALENT Exp
-#       | Exp DIFFERENT Exp
-#       | Exp GREATER Exp
-#       | Exp GREATEREQUAL Exp
-#       | Exp LESSER Exp
-#       | Exp LESSEREQUAL Exp
-#
-# Exp -> Exp ADD Termo
-#      | Exp SUB Termo
-#      | Termo
-#
-# Termo -> Termo MUL Fator
-#        | Termo DIV Fator
-#        | Termo MOD Fator
-#        | Fator
-#
-# Fator -> ( Exp )
-#        | NUM
-#        | ID
-#        | ID [ Exp ]
-#        | ID [ Exp ] [ Exp ]
-
-
 #############################################################
 #                       Main Program                        #
 #############################################################
@@ -89,48 +24,64 @@ def p_Declaracoes_Empty(p):
     "Declaracoes : "
     p[0] = ""
 
-def p_Declaracao_Vars_Simples(p):
-    "Declaracao : int Vars ';' "
-    p[0] = p[2]
- 
-def p_Declaracao_Vars_Valor(p):
-    "Declaracao : int VarsDeclaradas ';' "
+def p_Declaracao_Variaveis(p):
+    "Declaracao : int Variaveis ';' "
     p[0] = p[2]
 
-def p_Vars(p):
-    "Vars : Vars ',' Var"
+def p_Declaracao_Arrays(p):
+    "Declaracao : int Arrays ';'" 
+    p[0] = p[2]   
+
+def p_Variaveis(p):
+    "Variaveis : Variaveis ',' Variavel "
     p[0] = p[1] + p[3]
 
-def p_Vars_Empty(p):
-    "Vars : Var "
+def p_Variaveis_Simples(p):
+    "Variaveis : Variavel "
     p[0] = p[1]
+
+def p_Variavel_Vars(p):
+    "Variavel : Var"
+    p[0] = p[1]
+
+def p_Variavel_VarsDeclaradas(p):
+    "Variavel : VarDeclarada"
+    p[0] = p[1]
+
+def p_Arrays(p):
+    "Arrays : Arrays Array"
+    p[0] = p[1] + p[2]
+
+def p_Arrays_Unica(p):
+    "Arrays : Array"
+    p[0] = p[1]
+
+def p_Array_Uma_Dimensao(p):
+    "Array : ArrayDimensaoSimples"
+    p[0] = p[1]
+
+def p_Array_Duas_Dimensoes(p):
+    "Array : ArrayDimensaoDupla"
+    p[0] = p[1]
+    
+def p_ArrayDimensaoSimples(p):
+    "ArrayDimensaoSimples : '[' NUM ']' ID"
+    p[0] = 'pushn ' + p[2] + '\n'
+    p.parser.registers[p[4]] = p.parser.registerindex
+    p.parser.registerindex += int(p[2])
+
+def p_ArrayDimensaoDupla(p):
+    "ArrayDimensaoDupla : '[' NUM ']' '[' NUM ']' ID"
+    p[0] = 'pushn ' + str(int(p[2])*int(p[5])) + '\n'
+    p.parser.registers[p[7]] = p.parser.registerindex
+    p.parser.registerindex += int(p[2])*int(p[5])
+    p.parser.matrizes[p[7]] = int(p[5])
 
 def p_Var_ID(p):
     "Var : ID"
     p[0] = 'pushi 0\n'
     p.parser.registers[p[1]] = p.parser.registerindex
     p.parser.registerindex += 1
-
-def p_Var_Array(p):
-    "Var : '[' NUM ']' ID"
-    p[0] = 'pushn ' + p[2] + '\n'
-    p.parser.registers[p[4]] = p.parser.registerindex
-    p.parser.registerindex += int(p[2])
-
-def p_Var_Matrix(p):
-    "Var : '[' NUM ']' '[' NUM ']' ID"
-    p[0] = 'pushn ' + str(int(p[2])*int(p[5])) + '\n'
-    p.parser.registers[p[7]] = p.parser.registerindex
-    p.parser.registerindex += int(p[2])*int(p[5])
-    p.parser.matrizes[p[7]] = int(p[5])
-
-def p_VarsDeclaradas(p):
-    "VarsDeclaradas : VarsDeclaradas ',' VarDeclarada"
-    p[0] = p[1] + p[3]
-
-def p_VarsDeclaradas_Empty(p):
-    "VarsDeclaradas : VarDeclarada"
-    p[0] = p[1]
 
 def p_VarDeclarada(p):
     "VarDeclarada : ID EQUALS Exp"
@@ -191,6 +142,11 @@ def p_Else(p):
 def p_Instrucao_Repeat_Until(p):
     "Instrucao : REPEAT Instrucoes UNTIL '(' Conds ')' "
     p[0] = f'r{p.parser.ciclos}:\n{p[2]}{p[5]}jz r{p.parser.ciclos}\n'
+    p.parser.ciclos += 1
+
+def p_Instrucao_While_Do(p):
+    "Instrucao : WHILE '(' Conds ')' DO Instrucoes ENDWHILE"
+    p[0] = f'while{p.parser.ciclos}:\n{p[3]}jz fimwhile{p.parser.ciclos}\n{p[6]}jump while{p.parser.ciclos}\nfimwhile{p.parser.ciclos}:\n'
     p.parser.ciclos += 1
 
 #############################################################

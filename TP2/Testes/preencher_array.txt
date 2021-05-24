@@ -9,8 +9,9 @@ INSTR
         valores[i] = valor;
         i = i+1;
     UNTIL (i==max)
-    REPEAT
+    WHILE(max>0)
+    DO
         print(valores[max]);
         max = max-1;
-    UNTIL (max<0)
+    ENDWHILE
 ENDINSTR
