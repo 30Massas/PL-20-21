@@ -273,3 +273,5 @@ for linha in file:
     #print(result)
 
 parser.parse(content)
+
+file.close()
