@@ -1,13 +1,15 @@
 import ply.yacc as yacc
 from vim_tokens import tokens
 import sys
+import os
 
 #############################################################
 #                       Main Program                        #
 #############################################################
 def p_Programa(p):
     "Programa : Decl Instr"
-    p.parser.fileOut.write(f'{p[1]}start\n{p[2]}stop')
+    # p.parser.fileOut.write(f'{p[1]}start\n{p[2]}stop')
+    p[0] = f'{p[1]}start\n{p[2]}stop'
 
 #############################################################
 #                     Bloco Declarações                     #
@@ -251,7 +253,22 @@ def p_Fator_Exp(p):
 
 def p_error(p):
     print(f'Syntax Error: {p}')
-    parser.success = False
+
+
+while True:
+    try:
+        fileIn = open(f"{input('Introduce path to program to be compiled: ')}",'r')
+        break
+    except OSError:
+        print('Invalid path to file')
+
+while True:
+    try:
+        fileOut = input('Introduce path to outputfile: ')
+        break
+    except OSError:
+        print('Invalid path')
+
 
 # Build parser
 parser = yacc.yacc()
@@ -261,17 +278,18 @@ parser.registerindex = 0 # valor do offset
 parser.ifs = 0 # total de ifs
 parser.elses = 0 # total de elses
 parser.ciclos = 0 # total de ciclos
-parser.fileOut = open('teste.vm','w+')
-
-# Read input and parse it
-# Line by line
-file = open(f"{input('Introduce path to program to be compiled: ')}",'r')
+parser.fileOut = open(fileOut,'w+')
 
 content = ''
-for linha in file:
+for linha in fileIn:
     content += linha
     #print(result)
 
-parser.parse(content)
+try:
+    result = parser.parse(content)
+    parser.fileOut.write(result)
+except (TypeError):
+    print("An error ocurred during the compiling, no output could be given!")
+    os.remove(fileOut)
 
-file.close()
+fileIn.close()
