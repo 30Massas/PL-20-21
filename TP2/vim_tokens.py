@@ -18,7 +18,8 @@ reserved = {
     'UNTIL' : 'UNTIL',
     'WHILE' : 'WHILE',
     'DO' : 'DO',
-    'ENDWHILE' : 'ENDWHILE'
+    'ENDWHILE' : 'ENDWHILE',
+    'NOT' : 'NOT'
 }
 
 literals = ['(',')',';',',','[', ']']

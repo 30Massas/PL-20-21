@@ -113,19 +113,31 @@ def p_Instrucao_Print(p):
 
 def p_Instrucao_Read(p):
     "Instrucao : input '(' ID ')' ';'"
-    p[0] = 'read\natoi\n' + 'storeg ' + str(p.parser.registers.get(p[3])) + '\n'
+    if p[3] in p.parser.registers:
+        p[0] = 'read\natoi\n' + 'storeg ' + str(p.parser.registers.get(p[3])) + '\n'
+    else:
+        raise Exception
 
 def p_Instrucao_Atrib(p):
     "Instrucao : ID EQUALS Exp ';'"
-    p[0] = p[3] + 'storeg ' + str(p.parser.registers.get(p[1])) + '\n'
+    if p[1] in p.parser.registers:
+        p[0] = p[3] + 'storeg ' + str(p.parser.registers.get(p[1])) + '\n'
+    else:
+        raise Exception
 
 def p_Instrucao_Atrib_Array(p):
     "Instrucao : ID '[' Exp ']' EQUALS Exp ';'"
-    p[0] = 'pushgp\npushi ' + str(p.parser.registers.get(p[1]))  + '\npadd\n' + p[3] + p[6] + 'storen\n'
+    if p[1] in p.parser.registers:
+        p[0] = 'pushgp\npushi ' + str(p.parser.registers.get(p[1]))  + '\npadd\n' + p[3] + p[6] + 'storen\n'
+    else:
+        raise Exception
 
 def p_Instrucao_Atrib_Matrix(p):
     "Instrucao : ID '[' Exp ']' '[' Exp ']' EQUALS Exp ';'"
-    p[0] = 'pushgp\npushi ' + str(p.parser.registers.get(p[1])) + '\npadd\n' +  p[6] + p[3] + 'pushi ' + str(p.parser.matrizes[p[1]]) + '\nmul\nadd\n'  + p[9] + 'storen\n'
+    if p[1] in p.parser.registers:
+        p[0] = 'pushgp\npushi ' + str(p.parser.registers.get(p[1])) + '\npadd\n' +  p[6] + p[3] + 'pushi ' + str(p.parser.matrizes[p[1]]) + '\nmul\nadd\n'  + p[9] + 'storen\n'
+    else:
+        raise Exception
 
 def p_Instrucao_If(p):
     "Instrucao : IF '(' Conds ')' Instrucoes ENDIF "
@@ -166,6 +178,10 @@ def p_Conds_Or(p):
 def p_Conds_Unica(p):
     "Conds : Cond"
     p[0] = p[1]
+
+def p_Cond_Not(p):
+    "Conds : NOT '(' Conds ')' "
+    p[0] = p[3] + 'pushi 1\ninf\n'
 
 def p_Cond_Equivalent(p):
     "Cond : Exp EQUIVALENT Exp"
@@ -214,14 +230,17 @@ def p_Termo_Fator_mul(p):
 
 def p_Termo_Fator_div(p):
     "Termo : Termo DIV Fator"
-    if (p[3] != '0'):
+    if (p[3] != 'pushi 0\n'):
         p[0] = p[1] + p[3] + 'div\n'
     else:
         p[0] = 'pushi 0\n'
 
 def p_Termo_Fator_mod(p):
     "Termo : Termo MOD Fator"
-    p[0] = p[1] + p[3] + 'mod\n'
+    if (p[3] != 'pushi 0\n'):
+        p[0] = p[1] + p[3] + 'mod\n'
+    else:
+        p[0] = 'pushi 0\n'
 
 def p_Termo_Fator(p):
     "Termo : Fator"
@@ -229,15 +248,24 @@ def p_Termo_Fator(p):
 
 def p_Fator_ID(p):
     "Fator : ID"
-    p[0] = 'pushg ' + str(p.parser.registers.get(p[1])) + '\n'
+    if p[1] in p.parser.registers:
+        p[0] = 'pushg ' + str(p.parser.registers.get(p[1])) + '\n'
+    else:
+        raise Exception
 
 def p_Fator_ID_Array(p):
     "Fator : ID '[' Exp ']' "
-    p[0] = 'pushgp\npushi ' + str(p.parser.registers.get(p[1])) + '\npadd\n' + p[3] + 'loadn\n'
+    if p[1] in p.parser.registers:
+        p[0] = 'pushgp\npushi ' + str(p.parser.registers.get(p[1])) + '\npadd\n' + p[3] + 'loadn\n'
+    else:
+        raise Exception
 
 def p_Fator_ID_Matrix(p):
     "Fator : ID '[' Exp ']' '[' Exp ']' "
-    p[0] = 'pushgp\npushi ' + str(p.parser.registers.get(p[1])) + '\npadd\n' + p[6] + p[3] + 'pushi ' + str(p.parser.matrizes[p[1]]) + '\nmul\nadd\n' + 'loadn\n'
+    if p[1] in p.parser.registers:
+        p[0] = 'pushgp\npushi ' + str(p.parser.registers.get(p[1])) + '\npadd\n' + p[6] + p[3] + 'pushi ' + str(p.parser.matrizes[p[1]]) + '\nmul\nadd\n' + 'loadn\n'
+    else:
+        raise Exception
 
 def p_Fator_num(p):
     "Fator : NUM"
@@ -288,7 +316,7 @@ for linha in fileIn:
 try:
     result = parser.parse(content)
     parser.fileOut.write(result)
-except (TypeError):
+except (TypeError,Exception):
     print("An error ocurred during the compiling, no output could be given!")
     os.remove(fileOut)
 
