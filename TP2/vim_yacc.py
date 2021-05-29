@@ -3,6 +3,76 @@ from vim_tokens import tokens
 import sys
 import os
 
+# Programa -> Decl Instr
+#
+# Decl -> DECL Declaracoes ENDDECL
+#
+# Declaracoes -> Declaracoes Declaracao
+#              |
+#
+# Declaracao -> int Variaveis ;
+#             | int Array ;
+#
+# Variaveis -> Variaveis ',' Variavel
+#            | Variavel
+#
+# Variavel -> Var
+#           | VarDeclarada
+#
+# Array -> ArrayDimensaoSimples
+#        | ArrayDimensaoDupla
+#
+# Var -> ID
+# 
+# VarDeclarada -> ID EQUALS Exp
+#
+# ArrayDimensaoSimples -> [NUM] ID
+#
+# ArrayDimensaoDupla -> [NUM] [NUM] ID
+#
+# Instr -> INSTR Instrucoes ENDINSTR
+#
+# Instrucoes -> Instrucoes Instrucao
+#             | 
+#
+# Instrucao -> print ( Exp ) ;
+#            | input ( ID ) ;
+#            | ID EQUALS Exp ;
+#            | ID [ Exp ] EQUALS Exp ;
+#            | ID [ Exp ] [ Exp ] EQUALS Exp ;
+#            | IF ( Conds ) Instrucoes ENDIF 
+#            | IF ( Conds ) Instrucoes Else ENDIF 
+#            | REPEAT Instrucoes UNTIL ( Conds )
+#
+# Else -> ELSE Instrucoes ENDELSE
+#
+# Conds -> Conds AND Cond
+#        | Conds OR Cond
+#        | NOT ( Conds )
+#        | Cond
+#
+# Cond -> Exp EQUIVALENT Exp
+#       | Exp DIFFERENT Exp
+#       | Exp GREATER Exp
+#       | Exp GREATEREQUAL Exp
+#       | Exp LESSER Exp
+#       | Exp LESSEREQUAL Exp
+#
+# Exp -> Exp ADD Termo
+#      | Exp SUB Termo
+#      | Termo
+#
+# Termo -> Termo MUL Fator
+#        | Termo DIV Fator
+#        | Termo MOD Fator
+#        | Fator
+#
+# Fator -> ( Exp )
+#        | NUM
+#        | ID
+#        | ID [ Exp ]
+#        | ID [ Exp ] [ Exp ]
+
 #############################################################
 #                       Main Program                        #
 #############################################################
@@ -48,14 +118,6 @@ def p_Variavel_Vars(p):
 def p_Variavel_VarsDeclaradas(p):
     "Variavel : VarDeclarada"
     p[0] = p[1]
-
-# def p_Arrays(p):
-#     "Arrays : Arrays Array"
-#     p[0] = p[1] + p[2]
-
-# def p_Arrays_Unica(p):
-#     "Arrays : Array"
-#     p[0] = p[1]
 
 def p_Array_Uma_Dimensao(p):
     "Array : ArrayDimensaoSimples"
@@ -310,7 +372,6 @@ parser.fileOut = open(fileOut,'w+')
 content = ''
 for linha in fileIn:
     content += linha
-    #print(result)
 
 try:
     result = parser.parse(content)
@@ -320,3 +381,4 @@ except (TypeError,Exception):
     os.remove(fileOut)
 
 fileIn.close()
+parser.fileOut.close()
