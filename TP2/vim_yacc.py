@@ -8,7 +8,6 @@ import os
 #############################################################
 def p_Programa(p):
     "Programa : Decl Instr"
-    # p.parser.fileOut.write(f'{p[1]}start\n{p[2]}stop')
     p[0] = f'{p[1]}start\n{p[2]}stop'
 
 #############################################################
