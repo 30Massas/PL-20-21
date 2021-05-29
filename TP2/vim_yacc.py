@@ -241,7 +241,7 @@ def p_Conds_Unica(p):
     p[0] = p[1]
 
 def p_Cond_Not(p):
-    "Conds : NOT '(' Conds ')' "
+    "Cond : NOT '(' Conds ')' "
     p[0] = p[3] + 'pushi 1\ninf\n'
 
 def p_Cond_Equivalent(p):
