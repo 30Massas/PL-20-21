@@ -48,7 +48,6 @@ import os
 #
 # Conds -> Conds AND Cond
 #        | Conds OR Cond
-#        | NOT ( Conds )
 #        | Cond
 #
 # Cond -> Exp EQUIVALENT Exp
@@ -57,6 +56,7 @@ import os
 #       | Exp GREATEREQUAL Exp
 #       | Exp LESSER Exp
 #       | Exp LESSEREQUAL Exp
+#       | NOT ( Conds )
 #
 # Exp -> Exp ADD Termo
 #      | Exp SUB Termo
