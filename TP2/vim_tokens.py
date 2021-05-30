@@ -108,12 +108,3 @@ def t_error(t):
 
 #build the lexer
 lexer = lex.lex()
-
-# file = open('teste.txt')
-
-# for line in file:
-#     lexer.input(line)
-#     tok = lexer.token()
-#     while tok:
-#         print(tok)
-#         tok = lexer.token()
